@@ -205,6 +205,7 @@ void srt_handle::handle_push_data(SRT_SOCKSTATUS status, const std::string& path
 
     srt_conn_ptr->update_timestamp(srt_now_ms);
 
+#if 0
     srt2rtmp::get_instance()->insert_data_message(data, ret, subpath);
     {
         std::unique_lock<std::mutex> locker(srt2rtmp::_srt_error_mutex);
@@ -219,7 +220,7 @@ void srt_handle::handle_push_data(SRT_SOCKSTATUS status, const std::string& path
             }
         }
     }
-    
+#endif   
     //send data to subscriber(players)
     //streamid, play map<SRTSOCKET, SRT_CONN_PTR>
     auto streamid_iter = _streamid_map.find(path);
@@ -336,8 +337,8 @@ bool srt_handle::add_new_pusher(SRT_CONN_PTR conn_ptr) {
 }
 
 void srt_handle::handle_pull_data(SRT_SOCKSTATUS status, const std::string& subpath, SRTSOCKET conn_fd) {
-    srt_log_info("handle_pull_data status:%d, subpath:%s, fd:%d",
-        status, subpath.c_str(), conn_fd);
+//    srt_log_info("handle_pull_data status:%d, subpath:%s, fd:%d",
+//        status, subpath.c_str(), conn_fd);
     auto conn_ptr = get_srt_conn(conn_fd);
     if (!conn_ptr) {
         srt_log_error("handle_pull_data fail to find fd(%d)", conn_fd);

@@ -84,7 +84,8 @@ send buff:%d, recv buff:%d, payload size:%d, latency:%d, recv latency:%d, peer l
 }
 
 void srt_server::init_srt_log() {
-    SrsLogLevel level = srs_get_log_level(_srs_config->get_log_level());
+//    SrsLogLevel level = srs_get_log_level(_srs_config->get_log_level());
+	SrsLogLevel level = SrsLogLevelInfo;
     switch (level) {
         case SrsLogLevelInfo:
         {

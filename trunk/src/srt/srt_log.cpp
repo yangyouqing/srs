@@ -29,8 +29,11 @@ char* get_srt_log_buffer() {
     return srt_log_buffer;
 }
 
+#include <iostream>
+using namespace std;
 void srt_log_output(LOGGER_LEVEL level, const char* buffer) {
     std::string log_content(buffer);
     srt2rtmp::get_instance()->insert_log_message(level, log_content);
+	cout << log_content << std::endl;
     return;
 }
