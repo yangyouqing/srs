@@ -42,15 +42,27 @@ int srt_server::init_srt_parameter() {
     if (_server_socket == -1) {
         return -1;
     }
+
+#define SRS_SRT_MODE_FILE
+#ifdef SRS_SRT_MODE_FILE
+	SRT_TRANSTYPE transtype = SRTT_FILE;
+    int messageapi = 1;
+
+	srt_setsockopt(_server_socket, 0, SRTO_TRANSTYPE, &transtype, sizeof(transtype));
+	srt_setsockopt(_server_socket, 0, SRTO_MESSAGEAPI, &messageapi, sizeof(messageapi));
+#endif
+
     int maxbw = _srs_config->get_srto_maxbw();
     srt_setsockopt(_server_socket, 0, SRTO_MAXBW, &maxbw, opt_len);
     int mss = _srs_config->get_srto_mss();
     srt_setsockopt(_server_socket, 0, SRTO_MSS, &mss, opt_len);
 
-    bool tlpkdrop = _srs_config->get_srto_tlpkdrop();
-    int tlpkdrop_i = tlpkdrop ? 1 : 0;
-    srt_setsockopt(_server_socket, 0, SRTO_TLPKTDROP, &tlpkdrop_i, opt_len);
 
+    bool tlpkdrop = _srs_config->get_srto_tlpkdrop();
+#ifndef SRS_SRT_MODE_FILE
+    int tlpkdrop_i = tlpkdrop ? 1 : 0;
+    srt_setsockopt(_server_socket, 0, SRTO_TLPKTDROP, &tlpkdrop_i, opt_len); //TODO mod by yq
+#endif
     int connection_timeout = _srs_config->get_srto_conntimeout();
     srt_setsockopt(_server_socket, 0, SRTO_CONNTIMEO, &connection_timeout, opt_len);
     
